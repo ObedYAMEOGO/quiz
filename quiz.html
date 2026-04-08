@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Business Research — 200 MCQ Quiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
+header{background:#1a1a2e;color:#fff;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+header h1{font-size:1.1rem;font-weight:600;letter-spacing:.01em}
+#prog-wrap{display:flex;align-items:center;gap:.75rem;font-size:.85rem;color:#ccc}
+#prog-bar-outer{width:180px;height:6px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+#prog-bar{height:100%;background:#4ade80;border-radius:99px;transition:width .3s}
+#score-display{font-size:.85rem;color:#ccc}
+main{max-width:760px;margin:0 auto;padding:2rem 1.25rem 4rem}
+#start-screen{text-align:center;padding:3rem 1rem}
+#start-screen h2{font-size:1.6rem;font-weight:700;margin-bottom:.75rem}
+#start-screen p{color:#555;margin-bottom:2rem;line-height:1.6}
+.btn{display:inline-block;padding:.65rem 1.5rem;border-radius:8px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-primary{background:#1a1a2e;color:#fff}.btn-primary:hover{background:#2d2d4e}
+.btn-outline{background:#fff;color:#1a1a2e;border:1.5px solid #1a1a2e}.btn-outline:hover{background:#f0f0f8}
+#quiz-screen{display:none}
+.q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;font-size:.85rem;color:#666}
+.q-card{background:#fff;border-radius:14px;padding:1.75rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1.25rem}
+.q-num{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:.6rem}
+.q-text{font-size:1rem;font-weight:600;line-height:1.55;margin-bottom:1.25rem}
+.options{display:flex;flex-direction:column;gap:.6rem}
+.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.75rem 1rem;border-radius:9px;border:1.5px solid #e5e5e5;cursor:pointer;transition:border-color .15s,background .15s;font-size:.93rem;line-height:1.45}
+.opt:hover:not(.disabled){border-color:#1a1a2e;background:#f8f8ff}
+.opt.disabled{cursor:default}
+.opt-letter{font-weight:700;font-size:.85rem;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#555;flex-shrink:0;margin-top:1px;font-size:.8rem}
+.opt.correct{border-color:#16a34a;background:#f0fdf4}.opt.correct .opt-letter{background:#16a34a;color:#fff}
+.opt.wrong{border-color:#dc2626;background:#fff5f5}.opt.wrong .opt-letter{background:#dc2626;color:#fff}
+.opt.show-correct{border-color:#16a34a;background:#f0fdf4}.opt.show-correct .opt-letter{background:#16a34a;color:#fff}
+.feedback{margin-top:1rem;padding:.85rem 1rem;border-radius:9px;font-size:.88rem;line-height:1.55;display:none}
+.feedback.correct-fb{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d}
+.feedback.wrong-fb{background:#fff5f5;border:1px solid #fecaca;color:#7f1d1d}
+.feedback .fb-title{font-weight:700;margin-bottom:.25rem}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
+.skip-btn{background:none;border:none;font-size:.85rem;color:#888;cursor:pointer;text-decoration:underline;padding:.4rem 0}
+.skip-btn:hover{color:#555}
+#end-screen{display:none;text-align:center;padding:2rem 0}
+#end-screen h2{font-size:1.8rem;font-weight:700;margin-bottom:.5rem}
+.score-circle{width:140px;height:140px;border-radius:50%;border:6px solid #1a1a2e;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:1.5rem auto}
+.score-big{font-size:2.2rem;font-weight:800}
+.score-label{font-size:.8rem;color:#666;margin-top:2px}
+.grade-msg{font-size:1rem;color:#555;margin-bottom:1.5rem}
+.end-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.stat-row{display:flex;gap:1rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.stat{background:#fff;border-radius:10px;padding:.75rem 1.25rem;font-size:.85rem;color:#555;border:1px solid #e5e5e5}
+.stat strong{display:block;font-size:1.2rem;color:#1a1a2e;font-weight:700}
+.mode-select{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.mode-btn{padding:.5rem 1.1rem;border-radius:8px;border:1.5px solid #ddd;background:#fff;font-size:.85rem;cursor:pointer;transition:all .15s;font-weight:500}
+.mode-btn:hover,.mode-btn.active{border-color:#1a1a2e;background:#1a1a2e;color:#fff}
+@media(max-width:500px){header{padding:.9rem 1rem}#prog-bar-outer{width:120px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Business Research — MCQ Quiz</h1>
+  <div id="prog-wrap" style="display:none">
+    <div id="prog-bar-outer"><div id="prog-bar" style="width:0%"></div></div>
+    <span id="prog-text">0 / 200</span>
+  </div>
+  <div id="score-display" style="display:none">✓ <span id="live-score">0</span> &nbsp;✗ <span id="live-wrong">0</span></div>
+</header>
+<main>
+  <div id="start-screen">
+    <h2>Business Research Quiz</h2>
+    <p>200 multiple-choice questions covering all topics:<br>Research design, sampling, measurement scales, hypothesis testing, ANOVA, non-parametric tests, and research communication.</p>
+    <p style="margin-bottom:1rem;color:#444;font-size:.9rem">Choose a mode:</p>
+    <div class="mode-select">
+      <button class="mode-btn active" data-mode="all">All 200 questions</button>
+      <button class="mode-btn" data-mode="50">Quick — 50 random</button>
+      <button class="mode-btn" data-mode="20">Mini — 20 random</button>
+    </div>
+    <button class="btn btn-primary" id="start-btn">Start Quiz →</button>
+  </div>
+
+  <div id="quiz-screen">
+    <div class="q-header">
+      <span id="q-counter">Question 1 of 200</span>
+      <button class="skip-btn" id="skip-btn">Skip →</button>
+    </div>
+    <div class="q-card">
+      <div class="q-num" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-title" id="fb-title"></div>
+        <div id="fb-body"></div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <span style="font-size:.85rem;color:#888" id="q-pos-info"></span>
+      <button class="btn btn-primary" id="next-btn" style="display:none">Next →</button>
+    </div>
+  </div>
+
+  <div id="end-screen">
+    <h2>Quiz Complete!</h2>
+    <div class="score-circle">
+      <span class="score-big" id="final-score">0%</span>
+      <span class="score-label">Score</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><strong id="stat-correct">0</strong>Correct</div>
+      <div class="stat"><strong id="stat-wrong">0</strong>Wrong</div>
+      <div class="stat"><strong id="stat-skip">0</strong>Skipped</div>
+    </div>
+    <p class="grade-msg" id="grade-msg"></p>
+    <div class="end-btns">
+      <button class="btn btn-primary" id="restart-btn">Restart</button>
+      <button class="btn btn-outline" id="review-btn">Review Answers</button>
+    </div>
+  </div>
+</main>
+
+<script>
+const ALL_QUESTIONS = [
+  {
+    "id": 1,
+    "question": "What is business research?",
+    "options": {
+      "A": "A marketing-only activity",
+      "B": "A systematic and objective process for decision-making",
+      "C": "A financial forecasting tool",
+      "D": "A random process of collecting data"
+    },
+    "answer": "B",
+    "explanation": "Business research is systematic and objective, aimed at aiding decisions."
+  },
+  {
+    "id": 2,
+    "question": "The main goal of business research is to:",
+    "options": {
+      "A": "Eliminate competition",
+      "B": "Replace managers",
+      "C": "Increase profits directly",
+      "D": "Reduce uncertainty"
+    },
+    "answer": "D",
+    "explanation": "It reduces uncertainty by providing reliable information."
+  },
+  {
+    "id": 3,
+    "question": "Which is NOT a characteristic of valuable information?",
+    "options": {
+      "A": "Timeliness",
+      "B": "Completeness",
+      "C": "Bias",
+      "D": "Relevance"
+    },
+    "answer": "C",
+    "explanation": "Information should be unbiased, not biased."
+  },
+  {
+    "id": 4,
+    "question": "Research helps managers to:",
+    "options": {
+      "A": "Choose the best alternative",
+      "B": "Ignore risks",
+      "C": "Avoid decisions",
+      "D": "Reduce employees"
+    },
+    "answer": "A",
+    "explanation": "It supports selecting optimal decisions."
+  },
+  {
+    "id": 5,
+    "question": "Identifying declining sales is an example of:",
+    "options": {
+      "A": "Hypothesis",
+      "B": "Symptom",
+      "C": "Solution",
+      "D": "Core problem"
+    },
+    "answer": "B",
+    "explanation": "Declining sales is a symptom, not the root problem."
+  },
+  {
+    "id": 6,
+    "question": "Which research type expands knowledge without immediate application?",
+    "options": {
+      "A": "Basic research",
+      "B": "Diagnostic research",
+      "C": "Experimental research",
+      "D": "Applied research"
+    },
+    "answer": "A",
+    "explanation": "Basic research focuses on theory and knowledge."
+  },
+  {
+    "id": 7,
+    "question": "Applied research is used for:",
+    "options": {
+      "A": "Ignoring data",
+      "B": "Solving real-world problems",
+      "C": "Theory building",
+      "D": "Literature review"
+    },
+    "answer": "B",
+    "explanation": "It addresses practical issues."
+  },
+  {
+    "id": 8,
+    "question": "Total Quality Management focuses on:",
+    "options": {
+      "A": "Customer-driven quality",
+      "B": "Marketing only",
+      "C": "Profit only",
+      "D": "Employee salaries"
+    },
+    "answer": "A",
+    "explanation": "TQM emphasizes continuous improvement and customer satisfaction."
+  },
+  {
+    "id": 9,
+    "question": "Deductive reasoning starts from:",
+    "options": {
+      "A": "Observations",
+      "B": "General principles",
+      "C": "Specific cases",
+      "D": "Experiments"
+    },
+    "answer": "B",
+    "explanation": "Deduction moves from general to specific."
+  },
+  {
+    "id": 10,
+    "question": "Inductive reasoning moves from:",
+    "options": {
+      "A": "Theory to hypothesis",
+      "B": "Hypothesis to theory",
+      "C": "General to specific",
+      "D": "Specific to general"
+    },
+    "answer": "D",
+    "explanation": "Induction builds general conclusions from observations."
+  },
+  {
+    "id": 11,
+    "question": "The first step in decision-making is:",
+    "options": {
+      "A": "Implementation",
+      "B": "Identifying problems",
+      "C": "Monitoring",
+      "D": "Evaluating alternatives"
+    },
+    "answer": "B",
+    "explanation": "Problems must be identified first."
+  },
+  {
+    "id": 12,
+    "question": "Generating alternatives means:",
+    "options": {
+      "A": "Evaluating outcomes",
+      "B": "Ignoring problems",
+      "C": "Developing possible solutions",
+      "D": "Choosing a solution"
+    },
+    "answer": "C",
+    "explanation": "It involves creating possible solutions."
+  },
+  {
+    "id": 13,
+    "question": "Monitoring decisions involves:",
+    "options": {
+      "A": "Avoiding feedback",
+      "B": "Observing outcomes",
+      "C": "Ignoring results",
+      "D": "Changing objectives"
+    },
+    "answer": "B",
+    "explanation": "Monitoring checks effectiveness."
+  },
+  {
+    "id": 14,
+    "question": "The research process is:",
+    "options": {
+      "A": "Random",
+      "B": "Static",
+      "C": "Cyclical",
+      "D": "Linear only"
+    },
+    "answer": "C",
+    "explanation": "Research often loops back for refinement."
+  },
+  {
+    "id": 15,
+    "question": "Which stage involves collecting data?",
+    "options": {
+      "A": "Sampling",
+      "B": "Data gathering",
+      "C": "Reporting",
+      "D": "Analysis"
+    },
+    "answer": "B",
+    "explanation": "Data gathering is the collection stage."
+  },
+  {
+    "id": 16,
+    "question": "Sampling refers to:",
+    "options": {
+      "A": "Analysis",
+      "B": "Studying entire population",
+      "C": "Ignoring data",
+      "D": "Selecting a subset"
+    },
+    "answer": "D",
+    "explanation": "A sample is part of the population."
+  },
+  {
+    "id": 17,
+    "question": "Backward linkage means:",
+    "options": {
+      "A": "Revisiting earlier steps",
+      "B": "Ending research",
+      "C": "Ignoring results",
+      "D": "Moving forward only"
+    },
+    "answer": "A",
+    "explanation": "Later findings may require revisiting earlier steps."
+  },
+  {
+    "id": 18,
+    "question": "A research problem is:",
+    "options": {
+      "A": "A difficulty needing resolution",
+      "B": "Data",
+      "C": "A solution",
+      "D": "A hypothesis"
+    },
+    "answer": "A",
+    "explanation": "It is an issue requiring investigation."
+  },
+  {
+    "id": 19,
+    "question": "Customer complaints indicate:",
+    "options": {
+      "A": "Hypothesis",
+      "B": "Solution",
+      "C": "Indicators of a problem",
+      "D": "Success"
+    },
+    "answer": "C",
+    "explanation": "They signal issues."
+  },
+  {
+    "id": 20,
+    "question": "Internal criteria for selecting problems include:",
+    "options": {
+      "A": "Market trends",
+      "B": "Researcher interest",
+      "C": "Competitors",
+      "D": "Technology"
+    },
+    "answer": "B",
+    "explanation": "Internal factors include personal interest."
+  },
+  {
+    "id": 21,
+    "question": "External criteria include:",
+    "options": {
+      "A": "Researcher skills",
+      "B": "Time available",
+      "C": "Interest",
+      "D": "Feasibility"
+    },
+    "answer": "D",
+    "explanation": "External factors include feasibility and relevance."
+  },
+  {
+    "id": 22,
+    "question": "Research objectives should be:",
+    "options": {
+      "A": "Vague",
+      "B": "Long",
+      "C": "Complex",
+      "D": "Clear and achievable"
+    },
+    "answer": "D",
+    "explanation": "Clarity ensures effectiveness."
+  },
+  {
+    "id": 23,
+    "question": "Objectives usually start with:",
+    "options": {
+      "A": "To",
+      "B": "When",
+      "C": "How",
+      "D": "Why"
+    },
+    "answer": "A",
+    "explanation": "Standard format begins with 'To'."
+  },
+  {
+    "id": 24,
+    "question": "A research proposal is:",
+    "options": {
+      "A": "Data collection",
+      "B": "Hypothesis",
+      "C": "Final report",
+      "D": "Roadmap of research"
+    },
+    "answer": "D",
+    "explanation": "It outlines the research plan."
+  },
+  {
+    "id": 25,
+    "question": "Research design is:",
+    "options": {
+      "A": "Analysis",
+      "B": "Data collection",
+      "C": "Blueprint for research",
+      "D": "Sampling"
+    },
+    "answer": "C",
+    "explanation": "It structures the study."
+  },
+  {
+    "id": 26,
+    "question": "Good research design minimizes:",
+    "options": {
+      "A": "Bias",
+      "B": "Time",
+      "C": "Data",
+      "D": "Cost"
+    },
+    "answer": "A",
+    "explanation": "It reduces bias."
+  },
+  {
+    "id": 27,
+    "question": "Exploratory research is:",
+    "options": {
+      "A": "Quantitative",
+      "B": "Experimental",
+      "C": "Unstructured",
+      "D": "Structured"
+    },
+    "answer": "C",
+    "explanation": "It is informal and flexible."
+  },
+  {
+    "id": 28,
+    "question": "Exploratory research is used when:",
+    "options": {
+      "A": "Problem is unclear",
+      "B": "Hypothesis is tested",
+      "C": "Problem is clear",
+      "D": "Data is available"
+    },
+    "answer": "A",
+    "explanation": "Used when little is known."
+  },
+  {
+    "id": 29,
+    "question": "Descriptive research describes:",
+    "options": {
+      "A": "Hypotheses",
+      "B": "Characteristics",
+      "C": "Causes",
+      "D": "Experiments"
+    },
+    "answer": "B",
+    "explanation": "It answers who, what, when, etc."
+  },
+  {
+    "id": 30,
+    "question": "Diagnostic research determines:",
+    "options": {
+      "A": "Description",
+      "B": "Frequency or relationships",
+      "C": "Data collection",
+      "D": "Sampling"
+    },
+    "answer": "B",
+    "explanation": "It finds relationships."
+  },
+  {
+    "id": 31,
+    "question": "Hypothesis testing research is:",
+    "options": {
+      "A": "Descriptive",
+      "B": "Exploratory",
+      "C": "Informal",
+      "D": "Experimental"
+    },
+    "answer": "D",
+    "explanation": "It tests relationships scientifically."
+  },
+  {
+    "id": 32,
+    "question": "Control group receives:",
+    "options": {
+      "A": "Special treatment",
+      "B": "Analysis",
+      "C": "No data",
+      "D": "Normal conditions"
+    },
+    "answer": "D",
+    "explanation": "Used as baseline."
+  },
+  {
+    "id": 33,
+    "question": "Experimental group receives:",
+    "options": {
+      "A": "No treatment",
+      "B": "Special treatment",
+      "C": "Normal condition",
+      "D": "No analysis"
+    },
+    "answer": "B",
+    "explanation": "It gets the variable being tested."
+  },
+  {
+    "id": 34,
+    "question": "Independent variable is:",
+    "options": {
+      "A": "Cause",
+      "B": "Output",
+      "C": "Result",
+      "D": "Data"
+    },
+    "answer": "A",
+    "explanation": "It influences outcomes."
+  },
+  {
+    "id": 35,
+    "question": "Dependent variable is:",
+    "options": {
+      "A": "Effect",
+      "B": "Input",
+      "C": "Cause",
+      "D": "Sample"
+    },
+    "answer": "A",
+    "explanation": "It is affected by changes."
+  },
+  {
+    "id": 36,
+    "question": "Pilot studies are:",
+    "options": {
+      "A": "Small-scale preliminary studies",
+      "B": "Final studies",
+      "C": "Analysis",
+      "D": "Large-scale"
+    },
+    "answer": "A",
+    "explanation": "Used to test feasibility."
+  },
+  {
+    "id": 37,
+    "question": "Literature survey involves:",
+    "options": {
+      "A": "Reviewing previous work",
+      "B": "Experiments",
+      "C": "Sampling",
+      "D": "Observation"
+    },
+    "answer": "A",
+    "explanation": "It analyzes past research."
+  },
+  {
+    "id": 38,
+    "question": "Experience survey uses:",
+    "options": {
+      "A": "Structured interviews",
+      "B": "Data analysis",
+      "C": "Unstructured interviews",
+      "D": "Sampling"
+    },
+    "answer": "C",
+    "explanation": "Informal interviews with experts."
+  },
+  {
+    "id": 39,
+    "question": "Research design ensures:",
+    "options": {
+      "A": "Efficient process",
+      "B": "Random results",
+      "C": "Bias",
+      "D": "No data"
+    },
+    "answer": "A",
+    "explanation": "It improves efficiency."
+  },
+  {
+    "id": 40,
+    "question": "A good design maximizes:",
+    "options": {
+      "A": "Cost",
+      "B": "Reliability",
+      "C": "Bias",
+      "D": "Error"
+    },
+    "answer": "B",
+    "explanation": "Reliable data is key."
+  },
+  {
+    "id": 41,
+    "question": "Hypothesis is:",
+    "options": {
+      "A": "Variable",
+      "B": "Statement about population",
+      "C": "Data",
+      "D": "Sample"
+    },
+    "answer": "B",
+    "explanation": "It's a claim to test."
+  },
+  {
+    "id": 42,
+    "question": "Null hypothesis contains:",
+    "options": {
+      "A": "Random values",
+      "B": "Equality",
+      "C": "Inequality",
+      "D": "Data"
+    },
+    "answer": "B",
+    "explanation": "Includes =, ≤, ≥."
+  },
+  {
+    "id": 43,
+    "question": "Alternative hypothesis contains:",
+    "options": {
+      "A": "Data",
+      "B": "Inequality",
+      "C": "Constant",
+      "D": "Equality"
+    },
+    "answer": "B",
+    "explanation": "Uses <, >, ≠."
+  },
+  {
+    "id": 44,
+    "question": "Type I error is:",
+    "options": {
+      "A": "Rejecting false null",
+      "B": "Accepting false null",
+      "C": "Accepting true null",
+      "D": "Rejecting true null"
+    },
+    "answer": "D",
+    "explanation": "False rejection."
+  },
+  {
+    "id": 45,
+    "question": "Type II error is:",
+    "options": {
+      "A": "Accepting false null",
+      "B": "Rejecting true null",
+      "C": "Accepting true null",
+      "D": "Rejecting false null"
+    },
+    "answer": "A",
+    "explanation": "Failing to reject false null."
+  },
+  {
+    "id": 46,
+    "question": "Significance level is:",
+    "options": {
+      "A": "Sample size",
+      "B": "Error rate",
+      "C": "Mean",
+      "D": "Probability of Type I error"
+    },
+    "answer": "D",
+    "explanation": "Usually 0.05 or 0.01."
+  },
+  {
+    "id": 47,
+    "question": "If p-value ≤ α:",
+    "options": {
+      "A": "Recalculate",
+      "B": "Reject H₀",
+      "C": "Ignore",
+      "D": "Accept H₀"
+    },
+    "answer": "B",
+    "explanation": "Reject null hypothesis."
+  },
+  {
+    "id": 48,
+    "question": "Research communication involves:",
+    "options": {
+      "A": "Encoding and decoding",
+      "B": "Sampling",
+      "C": "Only writing",
+      "D": "Analysis"
+    },
+    "answer": "A",
+    "explanation": "It's a communication process."
+  },
+  {
+    "id": 49,
+    "question": "Audience interprets message through:",
+    "options": {
+      "A": "Analysis",
+      "B": "Encoding",
+      "C": "Decoding",
+      "D": "Sampling"
+    },
+    "answer": "C",
+    "explanation": "Decoding = interpretation."
+  },
+  {
+    "id": 50,
+    "question": "Executive summary is part of:",
+    "options": {
+      "A": "Prefatory section",
+      "B": "Appendix",
+      "C": "Methods",
+      "D": "Main body"
+    },
+    "answer": "A",
+    "explanation": "It appears at the beginning."
+  },
+  {
+    "id": 51,
+    "question": "Measurement in research refers to:",
+    "options": {
+      "A": "Observing behavior",
+      "B": "Assigning numbers to characteristics",
+      "C": "Sampling",
+      "D": "Collecting data"
+    },
+    "answer": "B",
+    "explanation": "Measurement assigns numbers/symbols to characteristics, not objects themselves."
+  },
+  {
+    "id": 52,
+    "question": "What do we measure in research?",
+    "options": {
+      "A": "Characteristics of objects",
+      "B": "Only behaviors",
+      "C": "Only numbers",
+      "D": "Objects directly"
+    },
+    "answer": "A",
+    "explanation": "We measure attributes like attitudes, not the object itself."
+  },
+  {
+    "id": 53,
+    "question": "Which is NOT a characteristic of measurement scales?",
+    "options": {
+      "A": "Description",
+      "B": "Hypothesis",
+      "C": "Distance",
+      "D": "Order"
+    },
+    "answer": "B",
+    "explanation": "Hypothesis is unrelated to measurement scale properties."
+  },
+  {
+    "id": 54,
+    "question": "Description in measurement refers to:",
+    "options": {
+      "A": "Ranking",
+      "B": "Distance",
+      "C": "Zero point",
+      "D": "Labeling values"
+    },
+    "answer": "D",
+    "explanation": "It assigns labels like 1 = Male."
+  },
+  {
+    "id": 55,
+    "question": "Order means:",
+    "options": {
+      "A": "Zero",
+      "B": "Labels",
+      "C": "Distance",
+      "D": "Ranking"
+    },
+    "answer": "D",
+    "explanation": "It indicates relative position."
+  },
+  {
+    "id": 56,
+    "question": "Distance refers to:",
+    "options": {
+      "A": "Ranking",
+      "B": "Categories",
+      "C": "Equal intervals",
+      "D": "Labels"
+    },
+    "answer": "C",
+    "explanation": "It shows measurable differences."
+  },
+  {
+    "id": 57,
+    "question": "Origin in a scale means:",
+    "options": {
+      "A": "Ranking",
+      "B": "True zero",
+      "C": "Label",
+      "D": "Distance"
+    },
+    "answer": "B",
+    "explanation": "A fixed starting point (true zero)."
+  },
+  {
+    "id": 58,
+    "question": "Nominal scale is used for:",
+    "options": {
+      "A": "Classification",
+      "B": "Measurement",
+      "C": "Distance",
+      "D": "Ranking"
+    },
+    "answer": "A",
+    "explanation": "It only categorizes data."
+  },
+  {
+    "id": 59,
+    "question": "Example of nominal scale:",
+    "options": {
+      "A": "Gender",
+      "B": "Income",
+      "C": "Age",
+      "D": "Temperature"
+    },
+    "answer": "A",
+    "explanation": "Gender is classification only."
+  },
+  {
+    "id": 60,
+    "question": "Ordinal scale provides:",
+    "options": {
+      "A": "Equal intervals",
+      "B": "Exact values",
+      "C": "True zero",
+      "D": "Ranking only"
+    },
+    "answer": "D",
+    "explanation": "It ranks but doesn't show differences."
+  },
+  {
+    "id": 61,
+    "question": "Example of ordinal scale:",
+    "options": {
+      "A": "Ranking students",
+      "B": "Temperature",
+      "C": "Weight",
+      "D": "Income"
+    },
+    "answer": "A",
+    "explanation": "Ranking shows order only."
+  },
+  {
+    "id": 62,
+    "question": "Interval scale has:",
+    "options": {
+      "A": "Only labels",
+      "B": "No order",
+      "C": "True zero",
+      "D": "Equal intervals"
+    },
+    "answer": "D",
+    "explanation": "Differences are meaningful but no true zero."
+  },
+  {
+    "id": 63,
+    "question": "Example of interval scale:",
+    "options": {
+      "A": "Income",
+      "B": "Gender",
+      "C": "Weight",
+      "D": "Temperature (Celsius)"
+    },
+    "answer": "D",
+    "explanation": "No true zero point."
+  },
+  {
+    "id": 64,
+    "question": "Ratio scale includes:",
+    "options": {
+      "A": "No order",
+      "B": "True zero",
+      "C": "Ranking only",
+      "D": "Only labels"
+    },
+    "answer": "B",
+    "explanation": "It has all properties including true zero."
+  },
+  {
+    "id": 65,
+    "question": "Example of ratio scale:",
+    "options": {
+      "A": "Gender",
+      "B": "Temperature",
+      "C": "Rank",
+      "D": "Age"
+    },
+    "answer": "D",
+    "explanation": "Age has a true zero."
+  },
+  {
+    "id": 66,
+    "question": "Comparative scales involve:",
+    "options": {
+      "A": "Measurement only",
+      "B": "Comparing objects",
+      "C": "Independent evaluation",
+      "D": "Ranking alone"
+    },
+    "answer": "B",
+    "explanation": "Objects are compared directly."
+  },
+  {
+    "id": 67,
+    "question": "Comparative scales produce data that is:",
+    "options": {
+      "A": "Ratio",
+      "B": "Ordinal",
+      "C": "Interval",
+      "D": "Nominal"
+    },
+    "answer": "B",
+    "explanation": "Only ranking is obtained."
+  },
+  {
+    "id": 68,
+    "question": "Paired comparison scaling involves:",
+    "options": {
+      "A": "Sampling",
+      "B": "Comparing two items",
+      "C": "Measuring distance",
+      "D": "Ranking many items"
+    },
+    "answer": "B",
+    "explanation": "Two items are compared at a time."
+  },
+  {
+    "id": 69,
+    "question": "Formula for paired comparisons is:",
+    "options": {
+      "A": "n²",
+      "B": "n+1",
+      "C": "n(n−1)/2",
+      "D": "n/2"
+    },
+    "answer": "C",
+    "explanation": "It calculates total comparisons."
+  },
+  {
+    "id": 70,
+    "question": "Rank order scaling involves:",
+    "options": {
+      "A": "Ranking multiple items",
+      "B": "Pair comparison",
+      "C": "Measuring distance",
+      "D": "Classification"
+    },
+    "answer": "A",
+    "explanation": "Items are ranked simultaneously."
+  },
+  {
+    "id": 71,
+    "question": "Non-comparative scales evaluate:",
+    "options": {
+      "A": "Ranking only",
+      "B": "Objects independently",
+      "C": "Sampling",
+      "D": "Objects relative to others"
+    },
+    "answer": "B",
+    "explanation": "Each item is evaluated separately."
+  },
+  {
+    "id": 72,
+    "question": "Example of non-comparative scale:",
+    "options": {
+      "A": "Rating satisfaction 1-5",
+      "B": "Sampling",
+      "C": "Ranking brands",
+      "D": "Paired comparison"
+    },
+    "answer": "A",
+    "explanation": "Independent evaluation."
+  },
+  {
+    "id": 73,
+    "question": "True score model equation is:",
+    "options": {
+      "A": "X = XT",
+      "B": "XO = XR",
+      "C": "X = Y + Z",
+      "D": "XO = XT + XS + XR"
+    },
+    "answer": "D",
+    "explanation": "Observed = true + systematic + random error."
+  },
+  {
+    "id": 74,
+    "question": "XT represents:",
+    "options": {
+      "A": "Observed score",
+      "B": "Error",
+      "C": "Bias",
+      "D": "True score"
+    },
+    "answer": "D",
+    "explanation": "The actual value."
+  },
+  {
+    "id": 75,
+    "question": "XS represents:",
+    "options": {
+      "A": "Observed score",
+      "B": "Random error",
+      "C": "Systematic error",
+      "D": "True score"
+    },
+    "answer": "C",
+    "explanation": "Consistent bias."
+  },
+  {
+    "id": 76,
+    "question": "XR represents:",
+    "options": {
+      "A": "True score",
+      "B": "Mean",
+      "C": "Random error",
+      "D": "Systematic error"
+    },
+    "answer": "C",
+    "explanation": "Irregular variation."
+  },
+  {
+    "id": 77,
+    "question": "Validity means:",
+    "options": {
+      "A": "Accuracy",
+      "B": "Speed",
+      "C": "Cost",
+      "D": "Consistency"
+    },
+    "answer": "A",
+    "explanation": "Measures what it should."
+  },
+  {
+    "id": 78,
+    "question": "Reliability means:",
+    "options": {
+      "A": "Consistency",
+      "B": "Cost",
+      "C": "Time",
+      "D": "Accuracy"
+    },
+    "answer": "A",
+    "explanation": "Same results repeatedly."
+  },
+  {
+    "id": 79,
+    "question": "Practicality includes:",
+    "options": {
+      "A": "Bias",
+      "B": "Error",
+      "C": "Economy",
+      "D": "Hypothesis"
+    },
+    "answer": "C",
+    "explanation": "Cost and convenience."
+  },
+  {
+    "id": 80,
+    "question": "Population refers to:",
+    "options": {
+      "A": "Subset",
+      "B": "Sample",
+      "C": "Data",
+      "D": "Entire group"
+    },
+    "answer": "D",
+    "explanation": "Whole group of interest."
+  },
+  {
+    "id": 81,
+    "question": "Sample is:",
+    "options": {
+      "A": "Data",
+      "B": "Entire population",
+      "C": "Variable",
+      "D": "Subset of population"
+    },
+    "answer": "D",
+    "explanation": "Smaller representation."
+  },
+  {
+    "id": 82,
+    "question": "Census means:",
+    "options": {
+      "A": "Sampling",
+      "B": "Random selection",
+      "C": "Studying all elements",
+      "D": "Observation"
+    },
+    "answer": "C",
+    "explanation": "Entire population studied."
+  },
+  {
+    "id": 83,
+    "question": "Sampling is preferred because of:",
+    "options": {
+      "A": "High cost",
+      "B": "Bias",
+      "C": "Speed and low cost",
+      "D": "Complexity"
+    },
+    "answer": "C",
+    "explanation": "Faster and cheaper."
+  },
+  {
+    "id": 84,
+    "question": "Sampling frame is:",
+    "options": {
+      "A": "Sample size",
+      "B": "Variable",
+      "C": "Population",
+      "D": "List of elements"
+    },
+    "answer": "D",
+    "explanation": "Source from which sample is drawn."
+  },
+  {
+    "id": 85,
+    "question": "Sampling frame error occurs when:",
+    "options": {
+      "A": "Analysis is done",
+      "B": "Data is accurate",
+      "C": "Sample is large",
+      "D": "Some elements are missing"
+    },
+    "answer": "D",
+    "explanation": "Incomplete list causes error."
+  },
+  {
+    "id": 86,
+    "question": "Sample size depends on:",
+    "options": {
+      "A": "Variance, error, confidence",
+      "B": "Data only",
+      "C": "Time only",
+      "D": "Cost only"
+    },
+    "answer": "A",
+    "explanation": "Statistical factors determine size."
+  },
+  {
+    "id": 87,
+    "question": "Sampling unit is:",
+    "options": {
+      "A": "Individual element",
+      "B": "Population",
+      "C": "Data",
+      "D": "Variable"
+    },
+    "answer": "A",
+    "explanation": "Basic unit selected."
+  },
+  {
+    "id": 88,
+    "question": "Probability sampling means:",
+    "options": {
+      "A": "Known chance of selection",
+      "B": "Bias",
+      "C": "No selection",
+      "D": "Random guessing"
+    },
+    "answer": "A",
+    "explanation": "Each element has a known probability."
+  },
+  {
+    "id": 89,
+    "question": "Simple random sampling gives:",
+    "options": {
+      "A": "Bias",
+      "B": "No chance",
+      "C": "Unequal chance",
+      "D": "Equal chance"
+    },
+    "answer": "D",
+    "explanation": "All elements are equally likely."
+  },
+  {
+    "id": 90,
+    "question": "Systematic sampling selects:",
+    "options": {
+      "A": "All elements",
+      "B": "Random elements",
+      "C": "Only first element",
+      "D": "Every nth element"
+    },
+    "answer": "D",
+    "explanation": "Uses fixed interval."
+  },
+  {
+    "id": 91,
+    "question": "Stratified sampling divides population into:",
+    "options": {
+      "A": "Variables",
+      "B": "Samples",
+      "C": "Units",
+      "D": "Strata"
+    },
+    "answer": "D",
+    "explanation": "Groups based on characteristics."
+  },
+  {
+    "id": 92,
+    "question": "Proportional stratified sampling means:",
+    "options": {
+      "A": "Fixed",
+      "B": "Random",
+      "C": "Sample proportional to population",
+      "D": "Equal sample"
+    },
+    "answer": "C",
+    "explanation": "Matches population proportions."
+  },
+  {
+    "id": 93,
+    "question": "Disproportionate sampling is used when:",
+    "options": {
+      "A": "Random",
+      "B": "High variability",
+      "C": "Equal distribution",
+      "D": "Low cost"
+    },
+    "answer": "B",
+    "explanation": "Focus on variable groups."
+  },
+  {
+    "id": 94,
+    "question": "Cluster sampling selects:",
+    "options": {
+      "A": "Individuals",
+      "B": "Data",
+      "C": "Variables",
+      "D": "Groups"
+    },
+    "answer": "D",
+    "explanation": "Entire groups are selected."
+  },
+  {
+    "id": 95,
+    "question": "Area sampling is based on:",
+    "options": {
+      "A": "Age",
+      "B": "Gender",
+      "C": "Income",
+      "D": "Geography"
+    },
+    "answer": "D",
+    "explanation": "Uses geographic areas."
+  },
+  {
+    "id": 96,
+    "question": "Primary data is:",
+    "options": {
+      "A": "Secondary data",
+      "B": "Old data",
+      "C": "Original data",
+      "D": "Published data"
+    },
+    "answer": "C",
+    "explanation": "Collected for the first time."
+  },
+  {
+    "id": 97,
+    "question": "Secondary data is:",
+    "options": {
+      "A": "Raw data",
+      "B": "Sample data",
+      "C": "Existing data",
+      "D": "New data"
+    },
+    "answer": "C",
+    "explanation": "Already collected."
+  },
+  {
+    "id": 98,
+    "question": "Personal interviews are:",
+    "options": {
+      "A": "Detailed but costly",
+      "B": "Automated",
+      "C": "Fast",
+      "D": "Cheap"
+    },
+    "answer": "A",
+    "explanation": "Provide depth but expensive."
+  },
+  {
+    "id": 99,
+    "question": "Telephone interviews are:",
+    "options": {
+      "A": "Long",
+      "B": "Faster and cheaper",
+      "C": "Expensive",
+      "D": "Detailed"
+    },
+    "answer": "B",
+    "explanation": "Less costly than personal interviews."
+  },
+  {
+    "id": 100,
+    "question": "Questionnaires are:",
+    "options": {
+      "A": "Always accurate",
+      "B": "Low cost but low response",
+      "C": "Complex",
+      "D": "Expensive"
+    },
+    "answer": "B",
+    "explanation": "Cheap but may have low response rates."
+  },
+  {
+    "id": 101,
+    "question": "A statistical hypothesis is:",
+    "options": {
+      "A": "A variable",
+      "B": "A claim about a population parameter",
+      "C": "A dataset",
+      "D": "A sample"
+    },
+    "answer": "B",
+    "explanation": "It is a statement to be tested statistically."
+  },
+  {
+    "id": 102,
+    "question": "Hypothesis testing involves:",
+    "options": {
+      "A": "Two complementary hypotheses",
+      "B": "One hypothesis",
+      "C": "One variable",
+      "D": "Three variables"
+    },
+    "answer": "A",
+    "explanation": "Null and alternative hypotheses."
+  },
+  {
+    "id": 103,
+    "question": "Null hypothesis (H₀) represents:",
+    "options": {
+      "A": "No effect or equality",
+      "B": "Alternative claim",
+      "C": "Sample mean",
+      "D": "Random value"
+    },
+    "answer": "A",
+    "explanation": "It includes equality (=, ≤, ≥)."
+  },
+  {
+    "id": 104,
+    "question": "Alternative hypothesis (H₁ or Hₐ) represents:",
+    "options": {
+      "A": "Sample size",
+      "B": "Equality",
+      "C": "Mean",
+      "D": "Opposite of null"
+    },
+    "answer": "D",
+    "explanation": "It contradicts H₀."
+  },
+  {
+    "id": 105,
+    "question": "Which symbol is used in H₀?",
+    "options": {
+      "A": ">",
+      "B": "≠",
+      "C": "=",
+      "D": "<"
+    },
+    "answer": "C",
+    "explanation": "H₀ always contains equality."
+  },
+  {
+    "id": 106,
+    "question": "Which symbol is used in Hₐ?",
+    "options": {
+      "A": "≠",
+      "B": "=",
+      "C": "≤",
+      "D": "≥"
+    },
+    "answer": "A",
+    "explanation": "Alternative uses inequality."
+  },
+  {
+    "id": 107,
+    "question": "Type I error occurs when:",
+    "options": {
+      "A": "Rejecting false H₀",
+      "B": "Rejecting true H₀",
+      "C": "Accepting false H₀",
+      "D": "Accepting true H₀"
+    },
+    "answer": "B",
+    "explanation": "False rejection."
+  },
+  {
+    "id": 108,
+    "question": "Type II error occurs when:",
+    "options": {
+      "A": "Rejecting false H₀",
+      "B": "Rejecting true H₀",
+      "C": "Accepting false H₀",
+      "D": "Accepting true H₀"
+    },
+    "answer": "C",
+    "explanation": "Failure to reject false H₀."
+  },
+  {
+    "id": 109,
+    "question": "Level of significance (α) is:",
+    "options": {
+      "A": "Mean",
+      "B": "Type I error probability",
+      "C": "Sample size",
+      "D": "Type II error"
+    },
+    "answer": "B",
+    "explanation": "Maximum allowed Type I error."
+  },
+  {
+    "id": 110,
+    "question": "Common α values are:",
+    "options": {
+      "A": "0.10, 0.05, 0.01",
+      "B": "0, 1",
+      "C": "0.2, 0.3",
+      "D": "1, 2, 3"
+    },
+    "answer": "A",
+    "explanation": "Standard levels."
+  },
+  {
+    "id": 111,
+    "question": "Critical region is:",
+    "options": {
+      "A": "Data set",
+      "B": "Rejection region",
+      "C": "Acceptance region",
+      "D": "Sample space"
+    },
+    "answer": "B",
+    "explanation": "Values leading to rejection of H₀."
+  },
+  {
+    "id": 112,
+    "question": "Critical value separates:",
+    "options": {
+      "A": "Data and sample",
+      "B": "Mean and variance",
+      "C": "Variables",
+      "D": "Acceptance and rejection region"
+    },
+    "answer": "D",
+    "explanation": "Boundary value."
+  },
+  {
+    "id": 113,
+    "question": "P-value represents:",
+    "options": {
+      "A": "Probability under H₀",
+      "B": "Mean",
+      "C": "Sample size",
+      "D": "Error"
+    },
+    "answer": "A",
+    "explanation": "Likelihood of observed result under H₀."
+  },
+  {
+    "id": 114,
+    "question": "If p > α:",
+    "options": {
+      "A": "Accept H₀",
+      "B": "Fail to reject H₀",
+      "C": "Ignore",
+      "D": "Reject H₀"
+    },
+    "answer": "B",
+    "explanation": "Not enough evidence to reject."
+  },
+  {
+    "id": 115,
+    "question": "Parametric tests assume:",
+    "options": {
+      "A": "Random sampling only",
+      "B": "Small data only",
+      "C": "Normal distribution",
+      "D": "No distribution"
+    },
+    "answer": "C",
+    "explanation": "They assume normality."
+  },
+  {
+    "id": 116,
+    "question": "Parametric tests require:",
+    "options": {
+      "A": "Known parameters",
+      "B": "Unknown data",
+      "C": "No parameters",
+      "D": "No assumptions"
+    },
+    "answer": "A",
+    "explanation": "Use mean and variance."
+  },
+  {
+    "id": 117,
+    "question": "t-test is used when:",
+    "options": {
+      "A": "Nominal data",
+      "B": "Large sample",
+      "C": "Small sample",
+      "D": "No data"
+    },
+    "answer": "C",
+    "explanation": "Typically n < 30."
+  },
+  {
+    "id": 118,
+    "question": "z-test is used when:",
+    "options": {
+      "A": "Large sample",
+      "B": "Nominal data",
+      "C": "Small sample",
+      "D": "No data"
+    },
+    "answer": "A",
+    "explanation": "Typically n > 30."
+  },
+  {
+    "id": 119,
+    "question": "Formula for t-test is:",
+    "options": {
+      "A": "x̄ − μ",
+      "B": "x̄ + μ",
+      "C": "(x̄−μ)/(s/√n)",
+      "D": "(x̄−μ)/(σ/√n)"
+    },
+    "answer": "C",
+    "explanation": "Uses sample standard deviation."
+  },
+  {
+    "id": 120,
+    "question": "Formula for z-test is:",
+    "options": {
+      "A": "μ − x̄",
+      "B": "x̄ + μ",
+      "C": "(x̄−μ)/(s/√n)",
+      "D": "(x̄−μ)/(σ/√n)"
+    },
+    "answer": "D",
+    "explanation": "Uses population standard deviation."
+  },
+  {
+    "id": 121,
+    "question": "Degrees of freedom in t-test is:",
+    "options": {
+      "A": "n + 1",
+      "B": "n",
+      "C": "n/2",
+      "D": "n − 1"
+    },
+    "answer": "D",
+    "explanation": "df = n − 1."
+  },
+  {
+    "id": 122,
+    "question": "Two-sample t-test compares:",
+    "options": {
+      "A": "Means of two groups",
+      "B": "Mode",
+      "C": "Median",
+      "D": "Variance"
+    },
+    "answer": "A",
+    "explanation": "Used to compare means."
+  },
+  {
+    "id": 123,
+    "question": "ANOVA stands for:",
+    "options": {
+      "A": "Analysis of Variance",
+      "B": "Analysis of Variables",
+      "C": "Average Normal Observation",
+      "D": "Applied Numerical Output"
+    },
+    "answer": "A",
+    "explanation": "Compares group means."
+  },
+  {
+    "id": 124,
+    "question": "ANOVA is used when comparing:",
+    "options": {
+      "A": "Three or more groups",
+      "B": "Variables",
+      "C": "Two groups",
+      "D": "One group"
+    },
+    "answer": "A",
+    "explanation": "More than two means."
+  },
+  {
+    "id": 125,
+    "question": "F-statistic is:",
+    "options": {
+      "A": "Sample size",
+      "B": "Ratio of variances",
+      "C": "Mean",
+      "D": "Error"
+    },
+    "answer": "B",
+    "explanation": "Between-group vs within-group variance."
+  },
+  {
+    "id": 126,
+    "question": "One-way ANOVA tests:",
+    "options": {
+      "A": "Three factors",
+      "B": "Variables",
+      "C": "One factor",
+      "D": "Two factors"
+    },
+    "answer": "C",
+    "explanation": "Single independent variable."
+  },
+  {
+    "id": 127,
+    "question": "Two-way ANOVA tests:",
+    "options": {
+      "A": "No variables",
+      "B": "One variable",
+      "C": "Two variables",
+      "D": "Three variables"
+    },
+    "answer": "C",
+    "explanation": "Two independent variables."
+  },
+  {
+    "id": 128,
+    "question": "Interaction effect means:",
+    "options": {
+      "A": "Sample size",
+      "B": "No effect",
+      "C": "Independent effects",
+      "D": "Combined effect of variables"
+    },
+    "answer": "D",
+    "explanation": "Variables influence each other."
+  },
+  {
+    "id": 129,
+    "question": "Multiple regression analyzes:",
+    "options": {
+      "A": "One variable",
+      "B": "Many dependent",
+      "C": "One dependent & many independent",
+      "D": "No variables"
+    },
+    "answer": "C",
+    "explanation": "Predicts one outcome from many inputs."
+  },
+  {
+    "id": 130,
+    "question": "Factor analysis is used for:",
+    "options": {
+      "A": "Collection",
+      "B": "Sampling",
+      "C": "Data reduction",
+      "D": "Prediction"
+    },
+    "answer": "C",
+    "explanation": "Reduces variables into factors."
+  },
+  {
+    "id": 131,
+    "question": "Conjoint analysis studies:",
+    "options": {
+      "A": "Sampling",
+      "B": "Consumer preferences",
+      "C": "Hypothesis",
+      "D": "Data collection"
+    },
+    "answer": "B",
+    "explanation": "Evaluates product attributes."
+  },
+  {
+    "id": 132,
+    "question": "Discriminant analysis is used for:",
+    "options": {
+      "A": "Sampling",
+      "B": "Classification",
+      "C": "Measurement",
+      "D": "Ranking"
+    },
+    "answer": "B",
+    "explanation": "Assigns observations to groups."
+  },
+  {
+    "id": 133,
+    "question": "Non-parametric tests are:",
+    "options": {
+      "A": "Distribution-dependent",
+      "B": "Complex",
+      "C": "Parametric",
+      "D": "Distribution-free"
+    },
+    "answer": "D",
+    "explanation": "No strict distribution assumption."
+  },
+  {
+    "id": 134,
+    "question": "Non-parametric tests use:",
+    "options": {
+      "A": "Interval only",
+      "B": "Nominal & ordinal data",
+      "C": "Continuous only",
+      "D": "Ratio data only"
+    },
+    "answer": "B",
+    "explanation": "Suitable for lower-level data."
+  },
+  {
+    "id": 135,
+    "question": "Advantage of non-parametric tests:",
+    "options": {
+      "A": "Complex",
+      "B": "Flexible",
+      "C": "Biased",
+      "D": "Expensive"
+    },
+    "answer": "B",
+    "explanation": "Works with many data types."
+  },
+  {
+    "id": 136,
+    "question": "Disadvantage of non-parametric tests:",
+    "options": {
+      "A": "Less powerful",
+      "B": "Too accurate",
+      "C": "Simple",
+      "D": "Cheap"
+    },
+    "answer": "A",
+    "explanation": "May lose information."
+  },
+  {
+    "id": 137,
+    "question": "Chi-square test compares:",
+    "options": {
+      "A": "Observed vs expected",
+      "B": "Means",
+      "C": "Variance",
+      "D": "Median"
+    },
+    "answer": "A",
+    "explanation": "Checks differences."
+  },
+  {
+    "id": 138,
+    "question": "Chi-square formula is:",
+    "options": {
+      "A": "E/O",
+      "B": "∑(O−E)²/E",
+      "C": "∑(O−E)",
+      "D": "O/E"
+    },
+    "answer": "B",
+    "explanation": "Standard formula."
+  },
+  {
+    "id": 139,
+    "question": "Goodness of fit test checks:",
+    "options": {
+      "A": "Fit between observed & expected",
+      "B": "Sample",
+      "C": "Mean",
+      "D": "Relationship"
+    },
+    "answer": "A",
+    "explanation": "Compares distributions."
+  },
+  {
+    "id": 140,
+    "question": "Chi-square independence test checks:",
+    "options": {
+      "A": "Variance",
+      "B": "Mean",
+      "C": "Relationship between variables",
+      "D": "Sample"
+    },
+    "answer": "C",
+    "explanation": "Tests association."
+  },
+  {
+    "id": 141,
+    "question": "Degrees of freedom for chi-square (independence):",
+    "options": {
+      "A": "n − 1",
+      "B": "(r −1)(c −1)",
+      "C": "r + c",
+      "D": "n"
+    },
+    "answer": "B",
+    "explanation": "Based on table size."
+  },
+  {
+    "id": 142,
+    "question": "Run test is used for:",
+    "options": {
+      "A": "Median",
+      "B": "Randomness",
+      "C": "Variance",
+      "D": "Mean"
+    },
+    "answer": "B",
+    "explanation": "Tests sequence randomness."
+  },
+  {
+    "id": 143,
+    "question": "A run is:",
+    "options": {
+      "A": "Random number",
+      "B": "Sequence of similar elements",
+      "C": "Data set",
+      "D": "Mean"
+    },
+    "answer": "B",
+    "explanation": "Same characteristics in sequence."
+  },
+  {
+    "id": 144,
+    "question": "Sign test evaluates:",
+    "options": {
+      "A": "Mean",
+      "B": "Sample",
+      "C": "Direction of differences",
+      "D": "Variance"
+    },
+    "answer": "C",
+    "explanation": "Focuses on positive/negative signs."
+  },
+  {
+    "id": 145,
+    "question": "Median test compares:",
+    "options": {
+      "A": "Variance",
+      "B": "Mode",
+      "C": "Means",
+      "D": "Medians"
+    },
+    "answer": "D",
+    "explanation": "Compares central tendency."
+  },
+  {
+    "id": 146,
+    "question": "Wilcoxon test is used when:",
+    "options": {
+      "A": "Data is ranked",
+      "B": "Data is normal",
+      "C": "Data is interval",
+      "D": "Data is large"
+    },
+    "answer": "A",
+    "explanation": "Non-parametric ranked data."
+  },
+  {
+    "id": 147,
+    "question": "Kruskal-Wallis test is alternative to:",
+    "options": {
+      "A": "Chi-square",
+      "B": "t-test",
+      "C": "ANOVA",
+      "D": "z-test"
+    },
+    "answer": "C",
+    "explanation": "Non-parametric ANOVA."
+  },
+  {
+    "id": 148,
+    "question": "Kruskal-Wallis uses:",
+    "options": {
+      "A": "Frequency",
+      "B": "Means",
+      "C": "Ranks",
+      "D": "Variance"
+    },
+    "answer": "C",
+    "explanation": "Rank-based test."
+  },
+  {
+    "id": 149,
+    "question": "Reject H₀ in Kruskal-Wallis when:",
+    "options": {
+      "A": "H small",
+      "B": "H > critical value",
+      "C": "Mean low",
+      "D": "Sample small"
+    },
+    "answer": "B",
+    "explanation": "Decision rule."
+  },
+  {
+    "id": 150,
+    "question": "Multivariate techniques analyze:",
+    "options": {
+      "A": "One variable",
+      "B": "No variables",
+      "C": "Multiple variables",
+      "D": "Sample"
+    },
+    "answer": "C",
+    "explanation": "Analyze many variables simultaneously."
+  },
+  {
+    "id": 151,
+    "question": "Research communication is:",
+    "options": {
+      "A": "Data collection",
+      "B": "Analysis",
+      "C": "Sampling",
+      "D": "Translating findings into understandable form"
+    },
+    "answer": "D",
+    "explanation": "It presents findings clearly to an audience."
+  },
+  {
+    "id": 152,
+    "question": "The communicator in research is:",
+    "options": {
+      "A": "Sample",
+      "B": "Audience",
+      "C": "Data",
+      "D": "Researcher"
+    },
+    "answer": "D",
+    "explanation": "The researcher sends the message."
+  },
+  {
+    "id": 153,
+    "question": "Encoding means:",
+    "options": {
+      "A": "Interpreting message",
+      "B": "Translating ideas into report",
+      "C": "Data collection",
+      "D": "Sampling"
+    },
+    "answer": "B",
+    "explanation": "Converting thoughts into communication."
+  },
+  {
+    "id": 154,
+    "question": "Decoding means:",
+    "options": {
+      "A": "Sampling",
+      "B": "Interpreting message",
+      "C": "Analysis",
+      "D": "Writing report"
+    },
+    "answer": "B",
+    "explanation": "Audience understanding the message."
+  },
+  {
+    "id": 155,
+    "question": "Message refers to:",
+    "options": {
+      "A": "Variable",
+      "B": "Sample",
+      "C": "Data",
+      "D": "Report"
+    },
+    "answer": "D",
+    "explanation": "The communicated research findings."
+  },
+  {
+    "id": 156,
+    "question": "Field of experience influences:",
+    "options": {
+      "A": "Understanding",
+      "B": "Data collection",
+      "C": "Hypothesis",
+      "D": "Sampling"
+    },
+    "answer": "A",
+    "explanation": "It affects interpretation."
+  },
+  {
+    "id": 157,
+    "question": "Effective communication requires:",
+    "options": {
+      "A": "Technical accuracy + clarity",
+      "B": "Only data",
+      "C": "Only analysis",
+      "D": "Only writing"
+    },
+    "answer": "A",
+    "explanation": "Clarity and accuracy are essential."
+  },
+  {
+    "id": 158,
+    "question": "Executive summary helps:",
+    "options": {
+      "A": "Sampling",
+      "B": "Detailed analysis",
+      "C": "Quick understanding",
+      "D": "Data collection"
+    },
+    "answer": "C",
+    "explanation": "Gives overview of findings."
+  },
+  {
+    "id": 159,
+    "question": "Prefatory section includes:",
+    "options": {
+      "A": "Results",
+      "B": "Methods",
+      "C": "Title page",
+      "D": "Discussion"
+    },
+    "answer": "C",
+    "explanation": "Includes title page, summary, etc."
+  },
+  {
+    "id": 160,
+    "question": "Main body includes:",
+    "options": {
+      "A": "Title page",
+      "B": "Appendix only",
+      "C": "References only",
+      "D": "Core research sections"
+    },
+    "answer": "D",
+    "explanation": "Contains main research content."
+  },
+  {
+    "id": 161,
+    "question": "Abstract provides:",
+    "options": {
+      "A": "References",
+      "B": "Tables",
+      "C": "Brief summary",
+      "D": "Full data"
+    },
+    "answer": "C",
+    "explanation": "Short overview of study."
+  },
+  {
+    "id": 162,
+    "question": "Introduction explains:",
+    "options": {
+      "A": "Results",
+      "B": "References",
+      "C": "Tables",
+      "D": "Importance of topic"
+    },
+    "answer": "D",
+    "explanation": "Sets context."
+  },
+  {
+    "id": 163,
+    "question": "Literature review includes:",
+    "options": {
+      "A": "Previous research",
+      "B": "Observation",
+      "C": "Sampling",
+      "D": "New data"
+    },
+    "answer": "A",
+    "explanation": "Reviews past studies."
+  },
+  {
+    "id": 164,
+    "question": "Methods section explains:",
+    "options": {
+      "A": "Summary",
+      "B": "References",
+      "C": "Data collection & analysis",
+      "D": "Results"
+    },
+    "answer": "C",
+    "explanation": "Details how research was done."
+  },
+  {
+    "id": 165,
+    "question": "Results section presents:",
+    "options": {
+      "A": "Hypothesis",
+      "B": "Findings",
+      "C": "Methods",
+      "D": "References"
+    },
+    "answer": "B",
+    "explanation": "Shows analysis outcomes."
+  },
+  {
+    "id": 166,
+    "question": "Discussion includes:",
+    "options": {
+      "A": "Raw data",
+      "B": "Interpretation of results",
+      "C": "Sampling",
+      "D": "Variables"
+    },
+    "answer": "B",
+    "explanation": "Explains meaning of results."
+  },
+  {
+    "id": 167,
+    "question": "References section contains:",
+    "options": {
+      "A": "Tables",
+      "B": "Sources used",
+      "C": "Data",
+      "D": "Variables"
+    },
+    "answer": "B",
+    "explanation": "Lists all sources."
+  },
+  {
+    "id": 168,
+    "question": "Appendix includes:",
+    "options": {
+      "A": "Results",
+      "B": "Summary",
+      "C": "Extra materials",
+      "D": "Hypothesis"
+    },
+    "answer": "C",
+    "explanation": "Additional supporting info."
+  },
+  {
+    "id": 169,
+    "question": "Literature review should be written in:",
+    "options": {
+      "A": "Copied form",
+      "B": "Own words",
+      "C": "Tables",
+      "D": "Quotes only"
+    },
+    "answer": "B",
+    "explanation": "Avoid plagiarism."
+  },
+  {
+    "id": 170,
+    "question": "Parenthetical citation format is:",
+    "options": {
+      "A": "Author only",
+      "B": "Year only",
+      "C": "Title",
+      "D": "(Author Year)"
+    },
+    "answer": "D",
+    "explanation": "Standard referencing format."
+  },
+  {
+    "id": 171,
+    "question": "Direct quotes require:",
+    "options": {
+      "A": "Only year",
+      "B": "Page number",
+      "C": "Only author",
+      "D": "No citation"
+    },
+    "answer": "B",
+    "explanation": "Must include page number."
+  },
+  {
+    "id": 172,
+    "question": "Tables should be:",
+    "options": {
+      "A": "Unlabeled",
+      "B": "Hidden",
+      "C": "Random",
+      "D": "Numbered & titled"
+    },
+    "answer": "D",
+    "explanation": "Ensures clarity."
+  },
+  {
+    "id": 173,
+    "question": "Asterisks in tables indicate:",
+    "options": {
+      "A": "Significance",
+      "B": "Errors",
+      "C": "Mean",
+      "D": "Sample size"
+    },
+    "answer": "A",
+    "explanation": "Highlight important results."
+  },
+  {
+    "id": 174,
+    "question": "Narrative results should:",
+    "options": {
+      "A": "Repeat tables",
+      "B": "Ignore tables",
+      "C": "Include all data",
+      "D": "Focus on key findings"
+    },
+    "answer": "D",
+    "explanation": "Only important results discussed."
+  },
+  {
+    "id": 175,
+    "question": "Plagiarism means:",
+    "options": {
+      "A": "Copying without credit",
+      "B": "Writing",
+      "C": "Sampling",
+      "D": "Analysis"
+    },
+    "answer": "A",
+    "explanation": "Using others' work as your own."
+  },
+  {
+    "id": 176,
+    "question": "Proper citation is needed for:",
+    "options": {
+      "A": "Titles",
+      "B": "Numbers",
+      "C": "General knowledge",
+      "D": "Specific facts"
+    },
+    "answer": "D",
+    "explanation": "Cite all non-general information."
+  },
+  {
+    "id": 177,
+    "question": "When in doubt, you should:",
+    "options": {
+      "A": "Ignore",
+      "B": "Delete",
+      "C": "Cite",
+      "D": "Change"
+    },
+    "answer": "C",
+    "explanation": "Always safer to cite."
+  },
+  {
+    "id": 178,
+    "question": "The purpose of research report is:",
+    "options": {
+      "A": "Communicate findings",
+      "B": "Collect data",
+      "C": "Hide data",
+      "D": "Sample"
+    },
+    "answer": "A",
+    "explanation": "Main goal is communication."
+  },
+  {
+    "id": 179,
+    "question": "Sampling error occurs due to:",
+    "options": {
+      "A": "Analysis",
+      "B": "Data",
+      "C": "Sample not representing population",
+      "D": "Variables"
+    },
+    "answer": "C",
+    "explanation": "Sample differs from population."
+  },
+  {
+    "id": 180,
+    "question": "Systematic error is:",
+    "options": {
+      "A": "Variable",
+      "B": "Random",
+      "C": "Consistent bias",
+      "D": "Unknown"
+    },
+    "answer": "C",
+    "explanation": "Repeated error in same direction."
+  },
+  {
+    "id": 181,
+    "question": "Random error is:",
+    "options": {
+      "A": "Predictable",
+      "B": "Fixed",
+      "C": "Unpredictable",
+      "D": "Constant"
+    },
+    "answer": "C",
+    "explanation": "Irregular variation."
+  },
+  {
+    "id": 182,
+    "question": "Reliability reduces:",
+    "options": {
+      "A": "Random error",
+      "B": "Systematic error",
+      "C": "Sample size",
+      "D": "Mean"
+    },
+    "answer": "A",
+    "explanation": "Ensures consistency."
+  },
+  {
+    "id": 183,
+    "question": "Validity ensures:",
+    "options": {
+      "A": "Speed",
+      "B": "Accuracy",
+      "C": "Consistency",
+      "D": "Cost"
+    },
+    "answer": "B",
+    "explanation": "Measures correct concept."
+  },
+  {
+    "id": 184,
+    "question": "Exploratory research is:",
+    "options": {
+      "A": "Rigid",
+      "B": "Structured",
+      "C": "Flexible",
+      "D": "Quantitative"
+    },
+    "answer": "C",
+    "explanation": "Used when little is known."
+  },
+  {
+    "id": 185,
+    "question": "Descriptive research answers:",
+    "options": {
+      "A": "Why only",
+      "B": "How only",
+      "C": "Who, what, when",
+      "D": "Where only"
+    },
+    "answer": "C",
+    "explanation": "Describes characteristics."
+  },
+  {
+    "id": 186,
+    "question": "Hypothesis testing determines:",
+    "options": {
+      "A": "Sampling",
+      "B": "Description",
+      "C": "Data",
+      "D": "Relationships"
+    },
+    "answer": "D",
+    "explanation": "Tests cause-effect relationships."
+  },
+  {
+    "id": 187,
+    "question": "Ratio scale includes:",
+    "options": {
+      "A": "Ranking",
+      "B": "Categories",
+      "C": "True zero",
+      "D": "Only labels"
+    },
+    "answer": "C",
+    "explanation": "Full measurement scale."
+  },
+  {
+    "id": 188,
+    "question": "Cluster sampling is useful when:",
+    "options": {
+      "A": "High cost",
+      "B": "No full list",
+      "C": "Small data",
+      "D": "Full list available"
+    },
+    "answer": "B",
+    "explanation": "Used when population list unavailable."
+  },
+  {
+    "id": 189,
+    "question": "Internet research is:",
+    "options": {
+      "A": "Expensive",
+      "B": "Slow",
+      "C": "Complex",
+      "D": "Fast and low cost"
+    },
+    "answer": "D",
+    "explanation": "Efficient method."
+  },
+  {
+    "id": 190,
+    "question": "Field experiment is conducted in:",
+    "options": {
+      "A": "Simulation",
+      "B": "Office",
+      "C": "Real environment",
+      "D": "Lab"
+    },
+    "answer": "C",
+    "explanation": "Natural setting."
+  },
+  {
+    "id": 191,
+    "question": "Laboratory experiment is:",
+    "options": {
+      "A": "Field",
+      "B": "Controlled",
+      "C": "Natural",
+      "D": "Random"
+    },
+    "answer": "B",
+    "explanation": "Controlled conditions."
+  },
+  {
+    "id": 192,
+    "question": "Observation method involves:",
+    "options": {
+      "A": "Asking questions",
+      "B": "Analysis",
+      "C": "Watching behavior",
+      "D": "Sampling"
+    },
+    "answer": "C",
+    "explanation": "Direct observation."
+  },
+  {
+    "id": 193,
+    "question": "Controlled observation is:",
+    "options": {
+      "A": "Random",
+      "B": "Unstructured",
+      "C": "Planned",
+      "D": "Natural"
+    },
+    "answer": "C",
+    "explanation": "Follows structured plan."
+  },
+  {
+    "id": 194,
+    "question": "Uncontrolled observation is:",
+    "options": {
+      "A": "Structured",
+      "B": "Controlled",
+      "C": "Natural",
+      "D": "Planned"
+    },
+    "answer": "C",
+    "explanation": "Occurs naturally."
+  },
+  {
+    "id": 195,
+    "question": "Research process is:",
+    "options": {
+      "A": "Static",
+      "B": "Fixed",
+      "C": "Continuous",
+      "D": "One-time"
+    },
+    "answer": "C",
+    "explanation": "Cyclical nature."
+  },
+  {
+    "id": 196,
+    "question": "Forward linkage means:",
+    "options": {
+      "A": "Affecting next stage",
+      "B": "Ending research",
+      "C": "Ignoring stages",
+      "D": "Going backward"
+    },
+    "answer": "A",
+    "explanation": "Earlier decisions affect later stages."
+  },
+  {
+    "id": 197,
+    "question": "Research design includes:",
+    "options": {
+      "A": "Entire framework",
+      "B": "Only data",
+      "C": "Only analysis",
+      "D": "Only sampling"
+    },
+    "answer": "A",
+    "explanation": "Blueprint of study."
+  },
+  {
+    "id": 198,
+    "question": "Good design minimizes:",
+    "options": {
+      "A": "Bias",
+      "B": "Variables",
+      "C": "Data",
+      "D": "Cost"
+    },
+    "answer": "A",
+    "explanation": "Reduces bias."
+  },
+  {
+    "id": 199,
+    "question": "Sampling improves:",
+    "options": {
+      "A": "Efficiency",
+      "B": "All of the above",
+      "C": "Cost",
+      "D": "Speed"
+    },
+    "answer": "B",
+    "explanation": "Sampling saves time and cost."
+  },
+  {
+    "id": 200,
+    "question": "The ultimate goal of research is to:",
+    "options": {
+      "A": "Support decision-making",
+      "B": "Sample population",
+      "C": "Analyze data",
+      "D": "Collect data"
+    },
+    "answer": "A",
+    "explanation": "Research supports better decisions."
+  }
+];
+
+let queue = [], idx = 0, correct = 0, wrong = 0, skipped = 0, answered = false;
+let mode = 'all';
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+  });
+});
+
+document.getElementById('start-btn').addEventListener('click', startQuiz);
+document.getElementById('next-btn').addEventListener('click', nextQ);
+document.getElementById('skip-btn').addEventListener('click', skipQ);
+document.getElementById('restart-btn').addEventListener('click', () => location.reload());
+document.getElementById('review-btn').addEventListener('click', reviewAnswers);
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  const shuffled = shuffle(ALL_QUESTIONS);
+  queue = mode === 'all' ? shuffled : mode === '50' ? shuffled.slice(0,50) : shuffled.slice(0,20);
+  idx = 0; correct = 0; wrong = 0; skipped = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('prog-wrap').style.display = 'flex';
+  document.getElementById('score-display').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  answered = false;
+  const q = queue[idx];
+  const total = queue.length;
+  document.getElementById('q-counter').textContent = `Question ${idx+1} of ${total}`;
+  document.getElementById('q-num').textContent = `Q${q.id}`;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('q-pos-info').textContent = `${idx+1} / ${total}`;
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'inline';
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'none'; fb.className = 'feedback';
+
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `${idx} / ${total}`;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  Object.entries(q.options).forEach(([lbl, text]) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.lbl = lbl;
+    div.innerHTML = `<span class="opt-letter">${lbl}</span><span>${text}</span>`;
+    div.addEventListener('click', () => choose(lbl, q));
+    opts.appendChild(div);
+  });
+}
+
+function choose(chosen, q) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('.opt').forEach(o => o.classList.add('disabled'));
+  const fb = document.getElementById('feedback');
+  const isCorrect = chosen === q.answer;
+  if (isCorrect) { correct++; } else { wrong++; }
+
+  document.querySelectorAll('.opt').forEach(o => {
+    if (o.dataset.lbl === chosen && isCorrect) o.classList.add('correct');
+    if (o.dataset.lbl === chosen && !isCorrect) o.classList.add('wrong');
+    if (o.dataset.lbl === q.answer && !isCorrect) o.classList.add('show-correct');
+  });
+
+  fb.style.display = 'block';
+  fb.classList.add(isCorrect ? 'correct-fb' : 'wrong-fb');
+  document.getElementById('fb-title').textContent = isCorrect ? '✓ Correct!' : `✗ Wrong — correct answer: ${q.answer}`;
+  document.getElementById('fb-body').textContent = q.explanation;
+
+  document.getElementById('live-score').textContent = correct;
+  document.getElementById('live-wrong').textContent = wrong;
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('skip-btn').style.display = 'none';
+}
+
+function skipQ() {
+  skipped++;
+  nextQ();
+}
+
+function nextQ() {
+  idx++;
+  if (idx >= queue.length) { showEnd(); return; }
+  renderQ();
+}
+
+function showEnd() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('end-screen').style.display = 'block';
+  document.getElementById('prog-bar').style.width = '100%';
+  const total = queue.length;
+  const attempted = correct + wrong;
+  const pct = attempted > 0 ? Math.round((correct / total) * 100) : 0;
+  document.getElementById('final-score').textContent = pct + '%';
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('stat-skip').textContent = skipped;
+  let msg = pct >= 90 ? '🏆 Outstanding! You mastered this topic.' :
+            pct >= 75 ? '🎉 Great job! Solid understanding.' :
+            pct >= 60 ? '👍 Good effort — review the missed questions.' :
+            pct >= 40 ? '📚 Keep studying — you\'re getting there.' :
+                        '💪 Don\'t give up — review the material and try again!';
+  document.getElementById('grade-msg').textContent = msg;
+}
+
+function reviewAnswers() {
+  document.getElementById('end-screen').style.display = 'none';
+  const quiz = document.getElementById('quiz-screen');
+  quiz.style.display = 'block';
+  quiz.innerHTML = '<h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1.5rem">Review — All Questions</h2>';
+  ALL_QUESTIONS.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.style.marginBottom = '1rem';
+    let optsHtml = Object.entries(q.options).map(([lbl, txt]) => {
+      let cls = 'opt disabled';
+      if (lbl === q.answer) cls += ' show-correct';
+      return `<div class="${cls}"><span class="opt-letter">${lbl}</span><span>${txt}</span></div>`;
+    }).join('');
+    card.innerHTML = `
+      <div class="q-num">Q${q.id}</div>
+      <div class="q-text">${q.question}</div>
+      <div class="options">${optsHtml}</div>
+      <div class="feedback correct-fb" style="display:block;margin-top:.75rem">
+        <div class="fb-title">✓ Answer: ${q.answer} — ${q.options[q.answer]}</div>
+        <div>${q.explanation}</div>
+      </div>`;
+    quiz.appendChild(card);
+  });
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn btn-primary';
+  backBtn.textContent = '← Back';
+  backBtn.style.marginTop = '1rem';
+  backBtn.addEventListener('click', () => location.reload());
+  quiz.appendChild(backBtn);
+}
+</script>
+</body>
+</html>
